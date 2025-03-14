@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+    <a href="{{ url_for('logout') }}">Logout</a> | <a href="{{ url_for('analytics') }}">View Analytics</a>
+
+    <h2>Add Expense</h2>
+    <form method="POST" action="{{ url_for('add_expense') }}">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="number" name="amount" placeholder="Amount" required>
+        <input type="text" name="category" placeholder="Category" required>
+        <input type="date" name="date" required>
+        <button type="submit">Add Expense</button>
+    </form>
+
+    <h2>Your Expenses</h2>
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ expense.title }}</td>
+            <td>${{ expense.amount }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.date }}</td>
+            <td>
+                <a href="{{ url_for('update_expense', id=expense.id) }}">Edit</a>
+                <form method="POST" action="{{ url_for('delete_expense', id=expense.id) }}" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
