@@ -5,7 +5,7 @@ import MySQLdb.cursors
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-
+BASE_URL = "https://your-app-name.onrender.com"
 # MySQL Configuration
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -28,10 +28,10 @@ def load_user(user_id):
 
 # Routes
 @app.route('/')
-def index():
-    return render_template('index.html')
+def index():  
+    return render_template('index.html',BASE_URL)
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('{{BASE_URL}}/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form['username']
@@ -43,7 +43,7 @@ def signup():
         return redirect(url_for('login'))
     return render_template('signup.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('{{BASE_URL}}/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -59,7 +59,7 @@ def login():
             flash('Invalid credentials!')
     return render_template('login.html')
 
-@app.route('/analytics')
+@app.route('{{BASE_URL}}/analytics')
 @login_required
 def analytics():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -74,7 +74,7 @@ def analytics():
     
     return render_template('analytics.html', total_expenses=total_expenses, category_expenses=category_expenses)
 
-@app.route('/dashboard')
+@app.route('{{BASE_URL}}/dashboard')
 @login_required
 def dashboard():
     username = session.get('username')
@@ -83,7 +83,7 @@ def dashboard():
     expenses = cursor.fetchall()
     return render_template('dashboard.html', username=username, expenses=expenses)
 
-@app.route('/add_expense', methods=['POST'])
+@app.route('{{BASE_URL}}/add_expense', methods=['POST'])
 @login_required
 def add_expense():
     title = request.form['title']
@@ -97,7 +97,7 @@ def add_expense():
     flash('Expense added successfully!')
     return redirect(url_for('dashboard'))
 
-@app.route('/delete_expense/<int:id>', methods=['POST'])
+@app.route('{{BASE_URL}}/delete_expense/<int:id>', methods=['POST'])
 @login_required
 def delete_expense(id):
     cursor = mysql.connection.cursor()
@@ -106,7 +106,7 @@ def delete_expense(id):
     flash('Expense deleted successfully!')
     return redirect(url_for('dashboard'))
 
-@app.route('/update_expense/<int:id>', methods=['GET', 'POST'])
+@app.route('{{BASE_URL}}/update_expense/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_expense(id):
     if request.method == 'POST':
@@ -129,7 +129,7 @@ def update_expense(id):
     expense = cursor.fetchone()
     return render_template('update_expense.html', expense=expense)
 
-@app.route('/logout')
+@app.route('{{BASE_URL}}/logout')
 @login_required
 def logout():
     logout_user()
