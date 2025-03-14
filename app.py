@@ -29,7 +29,7 @@ def load_user(user_id):
 # Routes
 @app.route('/')
 def index():  
-    return render_template('index.html',BASE_URL)
+    return render_template('index.html',BASE_URL=BASE_URL)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
